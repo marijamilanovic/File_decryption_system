@@ -21,7 +21,6 @@ public class Server {
 			
 			while (true) {
 				Socket sock = ss.accept();
-				System.out.println("Spojio se klijent sa: " + sock.getInetAddress());
 				ServerThread serverThread = new ServerThread(sock,zippedFileLocation);
 				serverThread.start();
 			}

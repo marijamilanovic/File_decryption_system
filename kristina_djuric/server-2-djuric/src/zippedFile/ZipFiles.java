@@ -29,8 +29,6 @@ public class ZipFiles {
 			 for(int i=0; i < sourceFiles.length; i++)
 			 {
 			 
-			 System.out.println("Adding " + sourceFiles[i].getName());
-			 
 			 FileInputStream fin = new FileInputStream(filesPath+"\\"+sourceFiles[i].getName());		 
 			 zout.putNextEntry(new ZipEntry(filesPath+"\\"+sourceFiles[i].getName()));
 			 
@@ -49,7 +47,6 @@ public class ZipFiles {
 		 zout.finish();
 		 zout.close();
 		 DBConnector.logZipInteraction(new InteractionLog(LocalDateTime.now(), ActionType.zipping));
-		 System.out.println("Zip file has been created!");
 		 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

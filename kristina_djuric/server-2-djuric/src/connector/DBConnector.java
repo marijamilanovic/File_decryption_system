@@ -15,9 +15,8 @@ public class DBConnector {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			con = DriverManager.getConnection("jdbc:sqlite:database.sqlite3");
-			System.out.println("Connected!");
+			System.out.println("Connected to DB!");
 		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -36,7 +35,6 @@ public class DBConnector {
 			ps.setString(1, fileName);
 			rs = ps.executeQuery();
 			decryptionKey = rs.getString(1);
-			System.out.println("KLJUC ZA TRAZENI FAJL " + decryptionKey);
 			
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -46,7 +44,6 @@ public class DBConnector {
 				ps.close();
 				con.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -72,7 +69,6 @@ public class DBConnector {
 				ps.close();
 				con.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

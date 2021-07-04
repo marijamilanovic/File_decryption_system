@@ -11,6 +11,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import filesHandler.TxtFileHandler;
+import filesHandler.XlsxFileHandler;
+
 public class Client {
 	
 	public static final int TCP_PORT = 9000;
@@ -22,33 +25,22 @@ public class Client {
 			
 			PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			BufferedReader fin = null;
-			File folder = new File("src/data");
-			File[] listOfFiles = folder.listFiles();
 
-			String s;
+			File folder = new File("./src/data");
+			String[] fileNames = folder.list();
+
 			String allData = "";
-			for(File f:listOfFiles)
-				if(f.getName().contains(".txt")) {
-					fin = new BufferedReader(new InputStreamReader(new FileInputStream("src/data/"+ f.getName())));
-					while ((s = fin.readLine()) != null) {
-						out.println(true);
-						//out.println(s);
-						allData+=s;
-						
-					}
-					out.println(f.getName()+"/CONTENT/"+allData+"/END/");
-					System.out.println(f.getName()+"/CONTENT/"+allData+"/END/");
-				}
+			for(String f:fileNames)
+				if(f.contains(".txt"))
+					allData += f+"/CONTENT/"+TxtFileHandler.readTxtFile("src/data/"+ f)+"/END/";
 				else
-					System.out.println("Excel file ");
-			
+					allData += f+"/CONTENT/"+XlsxFileHandler.readXlsxFile("src/data/"+ f)+"/END/";
+				
+			out.println(allData);
+			System.out.println(allData);
 			out.println(false);
 			out.println();
-			out.flush(); // ako ne ukljuèimo auto flush kod PrintWriter-a, moramo ovako
-			
-			fin.close();
-
+			out.flush();
 
 			String response = in.readLine();
 			System.out.println("[Server]: " + response);
