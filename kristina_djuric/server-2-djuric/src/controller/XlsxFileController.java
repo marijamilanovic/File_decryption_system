@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class XlsxFileController {
 
-	public static void createDecryptedXlsxFile(String fileLocation, String decryptedContent) {
+	public static void createAndWriteTxt(String fileLocation, String decryptedContent) {
 		try {
 			XSSFWorkbook workbook = new XSSFWorkbook();
 			XSSFSheet sheet = workbook.createSheet("Datatypes in Java");

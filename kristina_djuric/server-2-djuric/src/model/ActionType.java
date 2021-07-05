@@ -1,5 +1,5 @@
 package model;
 
 public enum ActionType {
-	decryption, zipping
+	decryption, zipping, writing
 }

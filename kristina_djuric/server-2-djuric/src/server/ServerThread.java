@@ -45,10 +45,10 @@ public class ServerThread extends Thread {
 				String decryptionKey = DBConnector.decryptionKeyForFile(fileNameContent[0]);
 				if (f.contains(".txt")) {
 					String decryptedContent = Encryptor.decrypt(decryptionKey, fileNameContent[1]);
-					TxtFileController.createDecryptedTxtFile(fileStorage + "\\" + fileNameContent[0], decryptedContent);
+					TxtFileController.createAndWriteTxt(fileStorage + "\\" + fileNameContent[0], decryptedContent);
 					DBConnector.logInteraction(new InteractionLog(LocalDateTime.now(), fileNameContent[0], ActionType.decryption));
 				} else {
-					XlsxFileController.createDecryptedXlsxFile(fileNameContent[0], decrtyptingTable(fileNameContent, decryptionKey));
+					XlsxFileController.createAndWriteTxt(fileNameContent[0], decrtyptingTable(fileNameContent, decryptionKey));
 					DBConnector.logInteraction(new InteractionLog(LocalDateTime.now(), fileNameContent[0], ActionType.decryption));
 				}
 			}

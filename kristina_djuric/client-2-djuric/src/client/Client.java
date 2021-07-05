@@ -18,14 +18,13 @@ public class Client {
 	public static final int TCP_PORT = 9000;
 
 	public static void main(String[] args) {
+		String[] fileNames = new File("src/data").list();
 		try {
 			InetAddress address = InetAddress.getByName("192.168.1.177");
 			Socket socket = new Socket(address, TCP_PORT);
 
 			PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-			String[] fileNames = new File("src/data").list();
 
 			String allData = "";
 			for (String f : fileNames)

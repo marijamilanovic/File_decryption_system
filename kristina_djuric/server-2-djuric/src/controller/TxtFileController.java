@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class TxtFileController {
 
-	public static void createDecryptedTxtFile(String fileLocation, String decryptedContent) {
+	public static void createAndWriteTxt(String fileLocation, String decryptedContent) {
 		try {
 			File decryptedFile = new File(fileLocation);
 			if (decryptedFile.createNewFile()) {
