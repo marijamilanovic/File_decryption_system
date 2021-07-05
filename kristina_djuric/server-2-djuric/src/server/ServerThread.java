@@ -5,21 +5,24 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.time.LocalDateTime;
 
 import connector.DBConnector;
+import controller.TxtFileController;
+import controller.XlsxFileController;
+import controller.ZipFilesController;
 import encryption.Encryptor;
-import filesHandler.TxtFileHandler;
-import filesHandler.XlsxFileHandler;
-import zippedFile.ZipFiles;
+import model.ActionType;
+import model.InteractionLog;
 
 public class ServerThread extends Thread {
-	
+
 	Socket socket;
 	BufferedReader in;
 	PrintWriter out;
-	String zippedFileLocation= "";
+	String zippedFileLocation = "";
 	String fileStorage = "src/data";
-	
+
 	public ServerThread(Socket s, String zippedFileLocation) {
 		this.socket = s;
 		try {
@@ -30,45 +33,49 @@ public class ServerThread extends Thread {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	public void run() {
 		System.out.println("Running thread...");
 		try {
 			String request = in.readLine();
-			String[] filesWithContent =  request.split("/END/");
+			String[] filesWithContent = request.split("/END/");
 
-			for(String f:filesWithContent) {
+			for (String f : filesWithContent) {
 				String[] fileNameContent = f.split("/CONTENT/");
 				String decryptionKey = DBConnector.decryptionKeyForFile(fileNameContent[0]);
-				if(f.contains(".txt")) {
+				if (f.contains(".txt")) {
 					String decryptedContent = Encryptor.decrypt(decryptionKey, fileNameContent[1]);
-					TxtFileHandler.createDecryptedTxtFile(fileStorage+"\\"+fileNameContent[0], decryptedContent);
-				}
-				else {
-					String decryptedContent = "";
-					String[] rowsContent = fileNameContent[1].split("/ROW/");
-					
-					for(String r:rowsContent) {
-						String[] rowCellsContent = r.split("/CELL/");
-						for(String c:rowCellsContent) {
-							decryptedContent += Encryptor.decrypt(decryptionKey, c)+"/CELL/";
-						}
-						decryptedContent += "/ROW/";
-					}
-					XlsxFileHandler.createDecryptedXlsxFile(fileNameContent[0], decryptedContent);
+					TxtFileController.createDecryptedTxtFile(fileStorage + "\\" + fileNameContent[0], decryptedContent);
+					DBConnector.logInteraction(new InteractionLog(LocalDateTime.now(), fileNameContent[0], ActionType.decryption));
+				} else {
+					XlsxFileController.createDecryptedXlsxFile(fileNameContent[0], decrtyptingTable(fileNameContent, decryptionKey));
+					DBConnector.logInteraction(new InteractionLog(LocalDateTime.now(), fileNameContent[0], ActionType.decryption));
 				}
 			}
-			ZipFiles.zipFiles();
-			
+			ZipFilesController.zipFiles(zippedFileLocation);
+
 			out.println("success");
 			out.flush();
-		
+
 			in.close();
 			out.close();
 			socket.close();
 		} catch (Exception ex) {
-			out.println("failure");
 			ex.printStackTrace();
 		}
+	}
+
+	private String decrtyptingTable(String[] fileNameContent, String decryptionKey) {
+		String decryptedContent = "";
+		String[] rowsContent = fileNameContent[1].split("/ROW/");
+
+		for (String r : rowsContent) {
+			String[] rowCellsContent = r.split("/CELL/");
+			for (String c : rowCellsContent) {
+				decryptedContent += Encryptor.decrypt(decryptionKey, c) + "/CELL/";
+			}
+			decryptedContent += "/ROW/";
+		}
+		return decryptedContent;
 	}
 }

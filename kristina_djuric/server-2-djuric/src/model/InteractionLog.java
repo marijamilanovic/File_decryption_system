@@ -3,12 +3,12 @@ package model;
 import java.time.LocalDateTime;
 
 public class InteractionLog {
-	
+
 	private Integer interactionId;
 	private LocalDateTime date;
 	private String fileName;
 	private ActionType actionType;
-	 
+
 	public InteractionLog() {
 		super();
 	}
@@ -27,7 +27,6 @@ public class InteractionLog {
 		this.actionType = actionType;
 	}
 
-	
 	public InteractionLog(LocalDateTime date, String fileName, ActionType actionType) {
 		super();
 		this.date = date;
@@ -66,7 +65,5 @@ public class InteractionLog {
 	public void setActionType(ActionType actionType) {
 		this.actionType = actionType;
 	}
-	
-	
-	
+
 }
